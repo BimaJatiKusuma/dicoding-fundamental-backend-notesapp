@@ -80,10 +80,10 @@ class NoteRepositories {
         const note = result.rows[0];
 
         if (note.owner !== owner) {
-            return null;
+            return false;
         }
 
-        return result.rows[0];
+        return true;
     }
 }
 

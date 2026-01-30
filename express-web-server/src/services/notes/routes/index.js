@@ -12,11 +12,11 @@ import authenticateToken from '../../../middlewares/auth.js';
 
 const router = express.Router();
 
-router.post('/notes', authenticateToken, validate(notePayloadSchema), addNote);
-router.get('/notes', authenticateToken, getNotes);
-router.get('/notes/:id', authenticateToken, getNoteById);
-router.put('/notes/:id', authenticateToken, validate(noteUpdatePayloadSchema), editNoteById);
-router.delete('/notes/:id', authenticateToken, deleteNoteById);
+router.post('/', authenticateToken, validate(notePayloadSchema), addNote);
+router.get('/', authenticateToken, getNotes);
+router.get('/:id', authenticateToken, getNoteById);
+router.put('/:id', authenticateToken, validate(noteUpdatePayloadSchema), editNoteById);
+router.delete('/:id', authenticateToken, deleteNoteById);
 
 export default router;
 

@@ -34,15 +34,15 @@ export const getNoteById = async (req, res, next) => {
 
   const isOwner = await noteRepositories.verifyNoteOwner(id, owner);
 
-  if (!isOwner) {
+  if(isOwner === null){
+    return next(new NotFoundError('Catatan tidak ditemukan'));
+  }
+
+  if (isOwner === false) {
     return next( new AuthorizationError('Anda tidak berhak mengakses resource ini'))
   }
 
   const note = await noteRepositories.getNoteById(id);
-
-  if(!note){
-    return next(new NotFoundError('Catatan tidak ditemukan'));
-  }
 
   return response(res, 200, 'Catatan sukses ditampilkan', {note});
 };
@@ -59,7 +59,11 @@ export const editNoteById = async (req, res, next) => {
 
   const isOwner = await noteRepositories.verifyNoteOwner(id, owner);
 
-  if (!isOwner) {
+  if(isOwner === null) {
+    return next(new NotFoundError('Catatan tidak ditemukan'));
+  }
+
+  if (isOwner === false) {
     return next( new AuthorizationError('Anda tidak berhak mengakses resource ini'));
   }
 
@@ -70,10 +74,6 @@ export const editNoteById = async (req, res, next) => {
     tags
   })
 
-  if(!note) {
-    return next(new NotFoundError('Catatan tidak ditemukan'));
-  }
-
   return response(res, 200, 'Catatan berhasil diperbarui', note);
 };
 
@@ -83,16 +83,14 @@ export const deleteNoteById = async (req, res, next) => {
   const { id: owner } = req.user;
 
   const isOwner = await noteRepositories.verifyNoteOwner(id, owner);
-
-  if (!isOwner) {
-    return next(new AuthorizationError('Anda tidak berhak menagkses resource ini'));
-  }
-
-  const deletedNote = await noteRepositories.deleteNote(id);
-
-  if(!deletedNote) {
+  if(isOwner === null) {
     return next(new NotFoundError('Catatan tidak ditemukan'));
   }
+  if (isOwner === false) {
+    return next(new AuthorizationError('Anda tidak berhak mengakses resource ini'));
+  }
 
-  return response(res, 200, 'Catatan berhasil dihapus', deletedNote);
+  const deletedNoteId = await noteRepositories.deleteNote(id);
+
+  return response(res, 200, 'Catatan berhasil dihapus', { noteId: deletedNoteId});
 };

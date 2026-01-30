@@ -8,7 +8,7 @@ export const createUser = async (req, res, next) => {
 
     const isUsernameExist = await UserRepositories.verifyNewUsername(username);
     if(isUsernameExist) {
-        return next(new InvariantError('Gagal menambahkan user. Username sudah digunakan'));
+        return next(new InvariantError('Gagal menambahkan user. Username sudah digunakan.'));
     }
 
     const user = await UserRepositories.createUser({
@@ -21,7 +21,9 @@ export const createUser = async (req, res, next) => {
         return next(new InvariantError('User gagal ditambahkan'));
     }
 
-    return response(res, 201, 'User berhasil ditambahkan', user);
+    return response(res, 201, 'User berhasil ditambahkan', {
+        userId: user.id
+    });
 }
 
 export const getUserById = async (req, res, next) => {
@@ -32,5 +34,11 @@ export const getUserById = async (req, res, next) => {
         return next(new NotFoundError('User tidak ditemukan'));
     }
 
-    return response(req, 200, 'User berasil ditampilkan', user);
+    return response(res, 200, 'User berasil ditampilkan', {
+        user: {
+            id: user.id,
+            username: user.username,
+            fullname: user.fullname
+        }
+    });
 }
