@@ -32,7 +32,7 @@ export const getNoteById = async (req, res, next) => {
   const { id } = req.params;
   const { id: owner } = req.user;
 
-  const isOwner = await noteRepositories.verifyNoteOwner(id, owner);
+  const isOwner = await noteRepositories.verifyNoteAccess(id, owner);
 
   if(isOwner === null){
     return next(new NotFoundError('Catatan tidak ditemukan'));
@@ -57,7 +57,7 @@ export const editNoteById = async (req, res, next) => {
 
   const {id: owner } = req.user;
 
-  const isOwner = await noteRepositories.verifyNoteOwner(id, owner);
+  const isOwner = await noteRepositories.verifyNoteAccess(id, owner);
 
   if(isOwner === null) {
     return next(new NotFoundError('Catatan tidak ditemukan'));

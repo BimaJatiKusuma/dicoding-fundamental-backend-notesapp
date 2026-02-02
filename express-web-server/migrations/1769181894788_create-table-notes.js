@@ -34,10 +34,6 @@ export const up = (pgm) => {
             type: 'TEXT',
             notNull: true,
         },
-        owner: {
-            type: 'TEXT',
-            notNull: false
-        }
     })
 };
 
